@@ -63,9 +63,9 @@ func SetField(fieldName string, dst any, value any) error {
 	return nil
 }
 
-func MakeFromHTMLNode[T any](doc *html.Node) (T, error) {
+func MakeFromHTMLNode[T any](doc *html.Node, tag string) (T, error) {
 	var ent T
-	entFields := MapStructFieldTags[T]("xpath")
+	entFields := MapStructFieldTags[T](tag)
 
 	for field, tag := range entFields {
 		if tag == "-" {
@@ -90,10 +90,10 @@ func MakeFromHTMLNode[T any](doc *html.Node) (T, error) {
 	return ent, nil
 }
 
-func MakeManyFromHTMLNode[T any](doc *html.Node, sel string) ([]T, error) {
-	entFields := MapStructFieldTags[T]("xpath")
+func MakeManyFromHTMLNode[T any](doc *html.Node, sel, tag string) ([]T, error) {
+	entFields := MapStructFieldTags[T](tag)
 
-	many := make([]T, 0)
+	many := make([]T, 1)
 
 	for _, ancestor := range htmlquery.Find(doc, sel) {
 		var one T
@@ -120,34 +120,6 @@ func MakeManyFromHTMLNode[T any](doc *html.Node, sel string) ([]T, error) {
 		}
 
 		many = append(many, one)
-	}
-
-	return many, nil
-}
-
-func MakeFromHTMLText[T any](html string) (T, error) {
-	doc, err := htmlquery.Parse(strings.NewReader(html))
-	if err != nil {
-		return *new(T), fmt.Errorf("parsing html: %w", err)
-	}
-
-	entity, err := MakeFromHTMLNode[T](doc)
-	if err != nil {
-		return *new(T), fmt.Errorf("parsing html doc: %w", err)
-	}
-
-	return entity, nil
-}
-
-func MakeManyFromHTMLText[T any](html, sel string) ([]T, error) {
-	doc, err := htmlquery.Parse(strings.NewReader(html))
-	if err != nil {
-		return nil, fmt.Errorf("parsing html: %w", err)
-	}
-
-	many, err := MakeManyFromHTMLNode[T](doc, sel)
-	if err != nil {
-		return nil, fmt.Errorf("parsing html doc: %w", err)
 	}
 
 	return many, nil
