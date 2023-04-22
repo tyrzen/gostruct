@@ -68,7 +68,7 @@ func MakeFromHTMLNode[T any](doc *html.Node, tag string) (T, error) {
 	entFields := MapStructFieldTags[T](tag)
 
 	for field, tag := range entFields {
-		if tag == "-" {
+		if tag == "-" || strings.HasSuffix(tag, "[..]") {
 			continue
 		}
 
@@ -99,7 +99,7 @@ func MakeManyFromHTMLNode[T any](doc *html.Node, sel, tag string) ([]T, error) {
 		var one T
 
 		for field, tag := range entFields {
-			if tag == "-" {
+			if tag == "-" || strings.HasSuffix(tag, "[..]") {
 				continue
 			}
 
