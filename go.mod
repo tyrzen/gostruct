@@ -8,7 +8,7 @@ require (
 )
 
 require (
-	github.com/antchfx/xpath v1.2.3 // indirect
+	github.com/antchfx/xpath v1.2.3
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	golang.org/x/text v0.13.0 // indirect
 )
